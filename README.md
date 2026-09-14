@@ -658,4 +658,4 @@ The R2 bucket `mycommerce-media` was created in the separate **Gadget02030** Clo
 [13]: https://vitest.dev/guide/ "Vitest documentation"
 [14]: https://docs.aws.amazon.com/s3/ "Amazon S3 documentation"
 
-**Author:** Manus AI
+**Author:** [Sayad Md Bayezid Hosan](https://sayadbayezid.com)
