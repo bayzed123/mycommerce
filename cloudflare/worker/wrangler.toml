@@ -1,0 +1,17 @@
+name = "mycommerce-api-gateway"
+main = "src/index.ts"
+compatibility_date = "2026-09-15"
+
+[vars]
+# Replace these with reachable HTTPS backend URLs before deployment.
+SHOP_API_URL = "https://shop-api.example.com"
+CART_API_URL = "https://cart-api.example.com"
+PURCHASE_API_URL = "https://purchase-api.example.com"
+ALLOWED_ORIGINS = "https://your-storefront.example.com"
+
+# Set API_GATEWAY_KEY as an encrypted secret with:
+# wrangler secret put API_GATEWAY_KEY
+
+# The R2 bucket is intentionally in the separate Gadget02030 account.
+# It is not bound here because Cloudflare Worker R2 bindings are account-scoped.
+# Access it from the backend through an appropriate R2/S3 integration when needed.

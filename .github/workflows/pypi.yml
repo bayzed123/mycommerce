@@ -1,0 +1,60 @@
+name: Publish mycommerce-platform to PyPI
+
+on:
+  push:
+    tags:
+      - "mycommerce-platform-v*"
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: "Publish the current package version to PyPI"
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/mycommerce-platform
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install build tools
+        run: python -m pip install --upgrade build pytest
+      - name: Test package
+        run: pytest
+      - name: Build distributions
+        run: python -m build
+      - name: Upload distributions
+        uses: actions/upload-artifact@v4
+        with:
+          name: mycommerce-platform-dist
+          path: packages/mycommerce-platform/dist/
+
+  publish:
+    if: startsWith(github.ref, 'refs/tags/mycommerce-platform-v') || (github.event_name == 'workflow_dispatch' && inputs.publish == true)
+    needs: test-and-build
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/mycommerce-platform
+    permissions:
+      id-token: write
+    steps:
+      - name: Download distributions
+        uses: actions/download-artifact@v4
+        with:
+          name: mycommerce-platform-dist
+          path: dist/
+      - name: Publish to PyPI with Trusted Publishing
+        uses: pypa/gh-action-pypi-publish@release/v1

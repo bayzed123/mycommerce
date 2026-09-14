@@ -1,0 +1,41 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "mycommerce-platform"
+version = "0.1.0"
+description = "Small, dependency-free Python client for the MyCommerce API gateway"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "MyCommerce Contributors" }]
+keywords = ["mycommerce", "ecommerce", "api", "shop", "cart", "payments"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Typing :: Typed",
+]
+
+[project.urls]
+Homepage = "https://github.com/bayzed123/mycommerce"
+Repository = "https://github.com/bayzed123/mycommerce"
+Issues = "https://github.com/bayzed123/mycommerce/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mycommerce"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.hatch.version]
+path = "src/mycommerce/__init__.py"

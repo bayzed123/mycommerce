@@ -633,6 +633,14 @@ The current root package scripts include frontend convenience commands, but they
 
 The frontend environment template and active Nuxt configuration contain a few naming differences, notably Firebase database and message-sender variable names. Keep the template synchronized with the variable names actually consumed by `nuxt.config.ts` whenever environment configuration is changed.
 
+## Cloudflare Worker and PyPI package
+
+The Cloudflare gateway source is in [`cloudflare/worker`](cloudflare/worker/README.md). It is intended for the **Sbayxed Cloudflare account** and proxies `/shop/*`, `/cart/*`, and `/purchase/*` to the three active backend services. Configure the origin URLs in `cloudflare/worker/wrangler.toml`, then deploy with Wrangler or the guarded `.github/workflows/worker.yml` workflow. The Worker must point to reachable HTTPS origins; it cannot reach local `127.0.0.1` services after deployment.
+
+The reusable Python client is in [`packages/mycommerce-platform`](packages/mycommerce-platform/README.md). Install it with `pip install mycommerce-platform` after publishing. The `.github/workflows/pypi.yml` workflow tests and builds the package and publishes it through PyPI Trusted Publishing when a tag matching `mycommerce-platform-v*` is pushed. Before the first release, create a PyPI Trusted Publisher for this GitHub repository, workflow, and the `pypi` environment. No PyPI token should be committed to the repository.
+
+The R2 bucket `mycommerce-media` was created in the separate **Gadget02030** Cloudflare account. It is intentionally not bound to the Sbayxed Worker because Worker R2 bindings are account-scoped. Use an authorized S3-compatible backend integration for that bucket when media storage is enabled.
+
 ## References
 
 [1]: https://github.com/bayzed123/mycommerce "MyCommerce source repository"
