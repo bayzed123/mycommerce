@@ -1,6 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { useGenerateProducts, IMAGE_GROUPS } from '../../layers/base/app/utils/__fixtures__'
-import type { ProductNode } from '../../app/types'
+import { useGenerateProducts } from '../../layers/base/app/utils/__fixtures__'
 
 describe.skip('Fixtures Generator - generateProducts', () => {
   it('should generate the correct number of products', async () => {

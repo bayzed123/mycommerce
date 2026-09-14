@@ -30,7 +30,7 @@
 <script setup lang="ts">
 import type { ProductNode } from '~/types'
 
-const { product } = defineProps<{ product: ProductNode, showBanner?: boolean }>()
+const { product } = defineProps<{ product: ProductNode }>()
 const emit = defineEmits<{ 'size-selected': [value: string] }>()
 
 /**

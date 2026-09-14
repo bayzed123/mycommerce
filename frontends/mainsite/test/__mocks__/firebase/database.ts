@@ -1,12 +1,12 @@
 import { vi } from 'vitest'
 
 // Simple mock for firebase/database
-export function getDatabase(app?: any) {
+export function getDatabase(_app?: any) {
   return {
     ref: (path: string) => ({
       path,
-      set: vi.fn((value: any) => Promise.resolve()),
-      push: vi.fn((value: any) =>
+      set: vi.fn((_value: any) => Promise.resolve()),
+      push: vi.fn((_value: any) =>
         Promise.resolve({
           key: 'mockedKey',
         })

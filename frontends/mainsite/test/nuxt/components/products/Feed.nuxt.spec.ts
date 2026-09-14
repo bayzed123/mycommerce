@@ -1,4 +1,4 @@
-import { ProductsFeed, ProductsFeedHeader, ProductsIterator } from '#components'
+import { ProductsFeed } from '#components'
 import { mockNuxtImport, mountSuspended } from '@nuxt/test-utils/runtime'
 import { afterAll, describe, expect, it, vi } from 'vitest'
 import { ref } from 'vue'
@@ -39,7 +39,7 @@ describe.skip('Products Feed Component', () => {
     const seeCollection = component.find('.link-collections-more')
     expect(seeCollection.exists()).toBe(false)
 
-    const requiredComponents = [ProductsFeedHeader, ProductsIterator]
+    // const requiredComponents = [ProductsFeedHeader, ProductsIterator]
     // requiredComponents.forEach(item => {
     //   const result = component.getComponent(item)
     //   expect(result).toBeDefined()
@@ -53,7 +53,7 @@ describe.skip('Products Feed Component', () => {
       status: ref('success')
     })
 
-    const component = await mountSuspended(ProductsFeed)
+    await mountSuspended(ProductsFeed)
 
     expect(mockUseFetch).toHaveBeenCalledWith('/api/collections/all', {
       method: 'GET',
@@ -62,7 +62,7 @@ describe.skip('Products Feed Component', () => {
       transform: (data: productFixture) => data
     })
 
-    const paginationBlock = component.find('#product-pagination')
+    // const paginationBlock = component.find('#product-pagination')
     // const button = paginationBlock.find('button')
     // console.log(component.html())
     // console.log(paginationBlock)

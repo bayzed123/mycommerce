@@ -1,5 +1,5 @@
 import { mountSuspended, renderSuspended } from '@nuxt/test-utils/runtime'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { defineComponent } from 'vue'
 import type { PropType } from 'vue'
 import Base from '~/components/product/page/aside/Base.vue'

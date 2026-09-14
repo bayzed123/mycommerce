@@ -43,21 +43,17 @@ const deliveryOptions = useStorage<DeliveryOption[]>('deliveryOptions', [])
  */
 const { $client } = useNuxtApp()
 const { data } = await useAsyncData('delivery-options', async () => {
-  return await Promise.all(
-    [
-      $client<DeliveryOption[]>('/api/v1/orders/delivery-options', {
-        method: 'GET',
-        baseURL: useRuntimeConfig().public.quartProdUrl,
-        onRequestError() {
-          console.log('TODO: Point to the Quart backend')
-        }
-      })
-    ]
-  )
+  return await $client<DeliveryOption[]>('/api/v1/orders/delivery-options', {
+    method: 'GET',
+    baseURL: useRuntimeConfig().public.quartProdUrl,
+    onRequestError() {
+      console.log('TODO: Point to the Quart backend')
+    }
+  })
 })
 
 if (data.value) {
-  deliveryOptions.value = data.value[1]
+  deliveryOptions.value = data.value
 }
 
 /**

@@ -6,7 +6,7 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 import timezone from 'dayjs/plugin/timezone'
 import utc from 'dayjs/plugin/utc'
 
-export default defineNuxtPlugin(nuxtApp => {
+export default defineNuxtPlugin(_nuxtApp => {
   dayjs.extend(calendar)
   dayjs.extend(duration)
   dayjs.extend(utc)

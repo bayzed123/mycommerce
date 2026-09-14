@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, vi } from 'vitest'
 import AddedProductModal from '~/components/modals/AddedProduct.vue'
 import { mockNuxtImport, mountSuspended } from '@nuxt/test-utils/runtime'
 import { getCartItem } from '~~/test/__fixtures__'

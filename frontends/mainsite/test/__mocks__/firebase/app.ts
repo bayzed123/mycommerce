@@ -11,7 +11,7 @@ export function initializeApp(config?: any) {
 }
 
 // Mock getAuth if used
-export function getAuth(app?: any) {
+export function getAuth(_app?: any) {
   return {
     currentUser: null,
     signInWithEmailAndPassword: vi.fn(),

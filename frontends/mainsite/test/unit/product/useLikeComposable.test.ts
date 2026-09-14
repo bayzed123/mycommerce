@@ -1,6 +1,5 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import type { MaybeType, ProductNode } from '../../../app/types'
-import { useSession } from '../../../layers/base/app/composables/use/session'
 
 const product: MaybeType<ProductNode> = {
   node: {
