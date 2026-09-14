@@ -1,0 +1,81 @@
+name: Main Storefront
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "frontends/mainsite/**"
+      - ".github/workflows/mainsite.yml"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "frontends/mainsite/**"
+      - ".github/workflows/mainsite.yml"
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: 22
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontends/mainsite
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+          cache-dependency-path: frontends/mainsite/pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Unit tests
+        run: pnpm test:unit
+
+  build:
+    needs: lint-and-test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontends/mainsite
+    env:
+      NUXT_PUBLIC_SITE_URL: "https://example.com"
+      NUXT_PUBLIC_SITE_NAME: "MyCommerce CI"
+      NUXT_PUBLIC_SITE_ENV: "ci"
+      NUXT_PUBLIC_DJANGO_SHOP_API: "https://shop-api.example.com"
+      NUXT_PUBLIC_DJANGO_CART_API: "https://cart-api.example.com"
+      NUXT_PUBLIC_GOLANG_PROD_URL: "https://purchase-api.example.com"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+          cache-dependency-path: frontends/mainsite/pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build

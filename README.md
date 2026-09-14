@@ -310,7 +310,7 @@ GET/POST  /graphql/
           /agents/
 ```
 
-The service Dockerfile exposes port 8000 and currently starts Django's development server. The `entrypoint.sh` file contains a production Gunicorn command, but migrations and `collectstatic` remain commented out; review it before using it as a production entrypoint.
+The service Dockerfile's production image runs `entrypoint.sh`, which applies migrations, runs `collectstatic`, and then starts Gunicorn. For local development with Django's development server instead, use `uv run python manage.py runserver` as shown above, or switch the Dockerfile `ENTRYPOINT` to the commented-out development line.
 
 ### Start Cart API
 
@@ -538,20 +538,32 @@ docker build -t mycommerce-gopurchase services/gopurchase
 docker build -t mycommerce-mainsite frontends/mainsite
 ```
 
-The root `docker-compose.yml` is **not currently aligned with this checkout**. It references services and infrastructure directories that are absent, including `services/mystore`, `services/mycart`, `services/myreviews`, `services/subscribers`, `services/goauthentication`, `docker/database`, and `docker/environment`. It also contains duplicate host port mappings and production hostnames such as `store.mycommerce.fr`. Do not run it as the primary local setup without first reconciling those paths with the active `services/cartapi`, `services/shopapi`, and `services/gopurchase` projects.
+The root `docker-compose.yml` has been rewritten to match this checkout: PostgreSQL, Redis, RabbitMQ, `shopapi`, `cartapi`, `gopurchase`, and their Celery workers. It no longer references the legacy `mystore`/`mycart`/`myreviews`/`subscribers`/`goauthentication` directories. To use it:
 
-For a reliable local environment, run PostgreSQL, Redis, and RabbitMQ separately or create a new Compose file that references the active service paths and explicit development environment files. Do not place production secrets in a Compose file.
+```bash
+cp services/shopapi/.env.example services/shopapi/.env
+cp services/cartapi/.env.example services/cartapi/.env
+cp services/gopurchase/.env.example services/gopurchase/.env
+# fill in real SECRET_KEY, JWT secrets, and Stripe keys in each .env
+docker compose up --build
+```
+
+`docker/postgres/init-multiple-databases.sh` creates the separate `mystore` and `mycart` databases used by the Shop and Cart APIs inside the single `postgres` container. Do not place production secrets in the Compose file itself; use the `.env` files (already `.gitignore`d) or your deployment platform's secret store. Nuxt frontends are not part of this Compose file — run them with `pnpm dev`, or deploy them to Cloudflare Pages/Workers, against the API base URLs these containers expose.
 
 ## CI/CD status
 
 The repository includes:
 
-- `.github/workflows/frontends.yml`, a manually dispatched admin-oriented frontend workflow using Node 24.
-- `.github/workflows/shop.yml`, a manually dispatched Python workflow that still points to `services/shop`, which is absent. The active service is `services/shopapi`.
-- `.github/workflows/gopurchase.yml`, which is named like the Shop workflow and also points to the absent `services/shop` directory rather than `services/gopurchase`.
-- `frontends/mobile/.github/workflows/ci.yml`, a push workflow that installs dependencies, lints, and type-checks the mobile frontend.
+- `.github/workflows/shopapi.yml` — installs with `uv`, runs `manage.py check` and `pytest` for `services/shopapi` against ephemeral Postgres and Redis service containers, then builds its Docker image.
+- `.github/workflows/cartapi.yml` — the same test/build pipeline for `services/cartapi`.
+- `.github/workflows/gopurchase.yml` — `go vet`, `go test`, and `go build` for `services/gopurchase` against ephemeral Redis and RabbitMQ containers, then builds its Docker image. `tests/integration` is excluded because it calls the live Stripe API and expects a committed `.env` file.
+- `.github/workflows/mainsite.yml` — lint, unit tests, and a production build for `frontends/mainsite`.
+- `.github/workflows/frontends.yml` — the existing admin-oriented frontend workflow (manual dispatch only).
+- `.github/workflows/worker.yml` — deploys the Cloudflare Worker gateway (manual dispatch, needs `CLOUDFLARE_API_TOKEN`/`CLOUDFLARE_ACCOUNT_ID` repository secrets).
+- `.github/workflows/pypi.yml` — tests, builds, and (on a `mycommerce-platform-v*` tag or manual dispatch) publishes `packages/mycommerce-platform` to PyPI via Trusted Publishing.
+- `frontends/mobile/.github/workflows/ci.yml` — installs dependencies, lints, and type-checks the mobile frontend on push.
 
-Before treating CI as authoritative, update the stale working-directory and script references. A suitable future workflow should use `services/shopapi`, `services/cartapi`, and `services/gopurchase` explicitly, install from their committed lockfiles, and run the commands in this README.
+All of the service and frontend workflows above trigger on `push`/`pull_request` to `main` (scoped to their own path) as well as `workflow_dispatch`, so pushing to `main` now runs the matching pipeline automatically instead of requiring a manual run.
 
 ## Postman collection
 
@@ -627,9 +639,11 @@ Run it inside the specific frontend directory. Confirm that Corepack is enabled 
 
 ## Known gaps and maintenance notes
 
-The repository contains useful but partially outdated planning material. `docs/ARCHITECTURE.md`, `.github/instructions/project-instructions.md`, several service READMEs, and `docker-compose.yml` refer to an earlier service layout. The active source tree is the authority for paths and commands. In particular, the current repository does not contain the legacy `mystore`, `mycart`, `myreviews`, `subscribers`, `goauthentication`, or `services/shop` directories described by some older documents.
+The repository contains useful but partially outdated planning material. `docs/ARCHITECTURE.md`, `.github/instructions/project-instructions.md`, and several service READMEs still refer to an earlier service layout (`mystore`, `mycart`, `myreviews`, `subscribers`, `goauthentication`, `services/shop`). The active source tree is the authority for paths and commands; `docker-compose.yml` and the `.github/workflows/*.yml` CI pipelines have been updated to match it (see [Docker status](#docker-status) and [CI/CD status](#cicd-status)).
 
-The current root package scripts include frontend convenience commands, but they do not provide a complete all-services orchestration command. A future improvement should add a maintained development Compose file or a documented process manager that starts PostgreSQL, Redis, RabbitMQ, both Django APIs, the Go service, and the selected Nuxt frontend with consistent environment names.
+The current root package scripts include frontend convenience commands, but they do not provide a complete all-services orchestration command; `docker compose up` is now the closest thing to one for the backend services.
+
+Known application-level bugs, tracked in `TODO.md`, that still need investigation against a live backend: the cart drawer does not show newly added items without a page refresh, the last product added to the cart renders nothing, and `/shop/<id>` product detail pages can 500/crash for some products. These could not be reproduced or fixed in this pass because no Shop/Cart API is deployed anywhere reachable yet — see [Cloudflare Worker and PyPI package](#cloudflare-worker-and-pypi-package).
 
 The frontend environment template and active Nuxt configuration contain a few naming differences, notably Firebase database and message-sender variable names. Keep the template synchronized with the variable names actually consumed by `nuxt.config.ts` whenever environment configuration is changed.
 

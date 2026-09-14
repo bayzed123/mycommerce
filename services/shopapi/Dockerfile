@@ -50,11 +50,8 @@ RUN chmod +x entrypoint.sh
 
 EXPOSE 8000
 
-# Run with gunicorn (replace 'config' with your Django project name)
-# ENTRYPOINT ["gunicorn", "shopapi.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "4", "--threads", "2", "--timeout", "120", "--access-logfile", "-", "--error-logfile", "-"]
+# For development, run with Django's development server instead:
+# ENTRYPOINT ["python", "manage.py", "runserver", "0.0.0.0:8000"]
 
-# For development, you might want to run with Django's development server
-ENTRYPOINT ["python", "manage.py", "runserver", "0.0.0.0:8000"]
-
-# For production
-# ENTRYPOINT [ "./entrypoint.sh" ]
+# Production entrypoint: runs migrations, collectstatic, then gunicorn
+ENTRYPOINT [ "./entrypoint.sh" ]

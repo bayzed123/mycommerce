@@ -12,9 +12,11 @@ import (
 )
 
 func main() {
-	err := godotenv.Load(".env")
-	if err != nil {
-		panic(err)
+	// .env is optional: local development loads it for convenience, but
+	// deployed environments (Docker, Railway, Render, systemd, etc.) inject
+	// real environment variables directly and ship no .env file at all.
+	if err := godotenv.Load(".env"); err != nil {
+		log.Printf("no .env file loaded (%v); continuing with process environment", err)
 	}
 
 	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt)
