@@ -9,7 +9,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/Zadigo/gopurchase/internal/utils"
+	"github.com/bayzed123/mycommerce/services/gopurchase/internal/utils"
 	"github.com/redis/go-redis/v9"
 	"gopkg.in/yaml.v3"
 )

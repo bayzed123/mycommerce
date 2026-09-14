@@ -456,7 +456,7 @@ The Cart API owns cart and order-related operations. Its code includes discounts
 
 ### Go purchase service
 
-The Go service is deliberately separated from the Django catalog and cart APIs. It owns payment-intent orchestration and recurring ticker work. Redis stores service state and Stripe is the payment provider. `config.yaml` describes optional payment, stock, and shipment downstream endpoints. The service currently imports the Go module path `github.com/Zadigo/gopurchase`; that module path is an internal dependency identity and is not the repository URL.
+The Go service is deliberately separated from the Django catalog and cart APIs. It owns payment-intent orchestration and recurring ticker work. Redis stores service state and Stripe is the payment provider. `config.yaml` describes optional payment, stock, and shipment downstream endpoints. Its Go module path is `github.com/bayzed123/mycommerce/services/gopurchase`, matching this repository.
 
 ### Firebase and analytics
 

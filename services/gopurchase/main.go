@@ -6,8 +6,8 @@ import (
 	"os"
 	"os/signal"
 
-	"github.com/Zadigo/gopurchase/internal/server"
-	"github.com/Zadigo/gopurchase/internal/utils"
+	"github.com/bayzed123/mycommerce/services/gopurchase/internal/server"
+	"github.com/bayzed123/mycommerce/services/gopurchase/internal/utils"
 	"github.com/joho/godotenv"
 )
 

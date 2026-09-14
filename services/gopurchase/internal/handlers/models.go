@@ -3,7 +3,7 @@ package handlers
 import (
 	"context"
 
-	"github.com/Zadigo/gopurchase/internal/models"
+	"github.com/bayzed123/mycommerce/services/gopurchase/internal/models"
 	"github.com/stripe/stripe-go/v85"
 )
 

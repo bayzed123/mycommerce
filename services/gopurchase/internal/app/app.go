@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/Zadigo/gopurchase/internal/models"
+	"github.com/bayzed123/mycommerce/services/gopurchase/internal/models"
 	"github.com/go-chi/chi"
 	"github.com/redis/go-redis/v9"
 )

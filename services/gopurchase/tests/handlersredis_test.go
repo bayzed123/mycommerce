@@ -3,8 +3,8 @@ package tests
 import (
 	"testing"
 
-	"github.com/Zadigo/gopurchase/internal/handlers"
-	"github.com/Zadigo/gopurchase/tests/utils"
+	"github.com/bayzed123/mycommerce/services/gopurchase/internal/handlers"
+	"github.com/bayzed123/mycommerce/services/gopurchase/tests/utils"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/stripe/stripe-go/v85"

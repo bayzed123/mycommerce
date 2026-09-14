@@ -1,4 +1,4 @@
-module github.com/Zadigo/gopurchase
+module github.com/bayzed123/mycommerce/services/gopurchase
 
 go 1.25.5
 

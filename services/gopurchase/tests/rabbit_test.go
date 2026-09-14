@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Zadigo/gopurchase/internal/backend/rabbit"
+	"github.com/bayzed123/mycommerce/services/gopurchase/internal/backend/rabbit"
 	ampq "github.com/rabbitmq/amqp091-go"
 	"github.com/stretchr/testify/assert"
 )

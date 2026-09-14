@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/Zadigo/gopurchase/internal/utils"
+	"github.com/bayzed123/mycommerce/services/gopurchase/internal/utils"
 )
 
 type TickerErrors struct {

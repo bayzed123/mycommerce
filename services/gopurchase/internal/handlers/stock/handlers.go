@@ -4,7 +4,7 @@ package stock
 // 	"bytes"
 // 	"encoding/json"
 
-// 	"github.com/Zadigo/purchase/internal/models"
+// 	"github.com/bayzed123/mycommerce/services/gopurchase/internal/models"
 // )
 
 // type StockInterface interface {

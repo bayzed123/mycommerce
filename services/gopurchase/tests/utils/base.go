@@ -9,8 +9,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/Zadigo/gopurchase/internal/handlers"
-	"github.com/Zadigo/gopurchase/internal/models"
+	"github.com/bayzed123/mycommerce/services/gopurchase/internal/handlers"
+	"github.com/bayzed123/mycommerce/services/gopurchase/internal/models"
 	"github.com/redis/go-redis/v9"
 )
 

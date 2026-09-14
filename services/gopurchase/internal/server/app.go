@@ -9,9 +9,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/Zadigo/gopurchase/internal/app"
-	"github.com/Zadigo/gopurchase/internal/models"
-	"github.com/Zadigo/gopurchase/internal/ticker"
+	"github.com/bayzed123/mycommerce/services/gopurchase/internal/app"
+	"github.com/bayzed123/mycommerce/services/gopurchase/internal/models"
+	"github.com/bayzed123/mycommerce/services/gopurchase/internal/ticker"
 	"github.com/redis/go-redis/v9"
 )
 
