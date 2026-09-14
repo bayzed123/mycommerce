@@ -63,4 +63,9 @@ jobs:
       - name: Publish to PyPI using API Token
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
+          # PyPI requires the literal string '__token__' when using an API token.
+          # Your identity (Sayadbayezid) is verified via the token itself.
+          user: __token__ 
           password: ${{ secrets.PYPI_MY_PROJECT_TOKEN }}
+          # Explicitly pointing to the downloaded distributions folder
+          packages-dir: dist/
