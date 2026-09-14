@@ -30,6 +30,12 @@ jobs:
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
+        with:
+          # pnpm/action-setup ignores defaults.run.working-directory and
+          # reads the repo root's package.json by default, which has no
+          # packageManager field (only frontends/mainsite's does). Point it
+          # at the right file explicitly instead of hardcoding a version.
+          package_json_file: frontends/mainsite/package.json
 
       - name: Install Node
         uses: actions/setup-node@v4
@@ -66,6 +72,8 @@ jobs:
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
+        with:
+          package_json_file: frontends/mainsite/package.json
 
       - name: Install Node
         uses: actions/setup-node@v4
