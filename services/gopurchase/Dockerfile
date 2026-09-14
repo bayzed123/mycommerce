@@ -16,8 +16,10 @@ FROM alpine:latest AS builder
 WORKDIR /app
 
 COPY --from=build-stage /app/server .
-COPY --from=build-stage /app/.env .
+COPY --from=build-stage /app/config.yaml .
 
+# No .env is baked into the image: pass real configuration as container
+# environment variables at deploy time (see services/gopurchase/README.md).
 EXPOSE 9000
 
 CMD [ "./server" ]

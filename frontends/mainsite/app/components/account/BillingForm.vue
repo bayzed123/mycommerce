@@ -95,7 +95,7 @@ const emit = defineEmits({
     return true
   },
   close() {
-    return false
+    return true
   }
 })
 

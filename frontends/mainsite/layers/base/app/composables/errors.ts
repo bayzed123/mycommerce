@@ -26,7 +26,7 @@ export function useErrorHandler() {
   // Global error state (optional, can be used for error logging or global error display)
   const globalError = ref<ErrorContext | null>(null)
 
-  function displayToast(title: string, description: string, error: FetchError | Error | unknown) {
+  function displayToast(title: string, description: string, _error: FetchError | Error | unknown) {
     $toast.error(title, {
       description,
       position: 'top-center'

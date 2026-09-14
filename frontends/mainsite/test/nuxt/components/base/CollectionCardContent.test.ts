@@ -1,5 +1,5 @@
 import { mountSuspended } from '@nuxt/test-utils/runtime'
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import BaseCardContent from '~/components/base/collection/CardContent.vue'
 import type { TestCases } from '../../../setup'
 import { faker } from '@faker-js/faker'

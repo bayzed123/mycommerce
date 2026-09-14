@@ -1,0 +1,112 @@
+name: Cart API
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "services/cartapi/**"
+      - ".github/workflows/cartapi.yml"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "services/cartapi/**"
+      - ".github/workflows/cartapi.yml"
+  workflow_dispatch:
+
+env:
+  PYTHON_VERSION: "3.14"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: services/cartapi
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: mycart
+          POSTGRES_USER: mycart
+          POSTGRES_PASSWORD: mycart
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      rabbitmq:
+        image: rabbitmq:3-management-alpine
+        env:
+          RABBITMQ_DEFAULT_USER: guest
+          RABBITMQ_DEFAULT_PASS: guest
+        ports:
+          - 5672:5672
+        options: >-
+          --health-cmd "rabbitmq-diagnostics -q ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DEBUG: "True"
+      SECRET_KEY: "ci-secret-key"
+      DB_NAME: mycart
+      DB_USER: mycart
+      DB_PASSWORD: mycart
+      DB_HOST: localhost
+      REDIS_HOST: localhost
+      REDIS_PASSWORD: ""
+      RABBITMQ_HOST: localhost
+      RABBITMQ_USER: guest
+      RABBITMQ_PASSWORD: guest
+      STRIPE_TEST_SECRET_KEY: "sk_test_ci_placeholder"
+      STRIPE_PRODUCTION_API_KEY: ""
+      PY_UTILITIES_JWT_ISSUER: "cartapi"
+      PY_UTILITIES_JWT_SECRET: "ci-jwt-secret"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+        with:
+          version: "latest"
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: uv sync --frozen
+
+      - name: Django system check
+        run: uv run python manage.py check
+
+      # orders/tests/test_e2e_api.py and orders/tests/test_payment.py make
+      # real calls to the Stripe API and to the Go purchase service
+      # (services/gopurchase), neither of which is available with CI's
+      # placeholder Stripe key and no running Go service. They need real
+      # test-mode Stripe credentials and the Go service as a CI dependency
+      # to run meaningfully, so they're excluded here rather than asserted
+      # against a guaranteed-failing environment.
+      - name: Run tests
+        run: uv run pytest --ignore=orders/tests/test_e2e_api.py --ignore=orders/tests/test_payment.py
+
+  build-image:
+    needs: test
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Build Docker image
+        run: docker build -t mycommerce-cartapi services/cartapi

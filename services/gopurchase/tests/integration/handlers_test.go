@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/Zadigo/gopurchase/tests/utils"
+	"github.com/bayzed123/mycommerce/services/gopurchase/tests/utils"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"

@@ -1,5 +1,5 @@
 import { mountSuspended } from '@nuxt/test-utils/runtime'
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, it, vi } from 'vitest'
 import Index from '~/pages/shop/collection/[id].vue'
 
 vi.mock('~/components/products/Feed.vue', () => ({

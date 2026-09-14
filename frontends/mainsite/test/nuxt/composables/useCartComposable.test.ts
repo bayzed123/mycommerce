@@ -4,7 +4,7 @@ import { useCookie } from '#imports'
 import { useCartComposable } from '../../../layers/base/app/composables/use/cart'
 import { mockNuxtImport } from '@nuxt/test-utils/runtime'
 import type { CookieOptions } from '#app'
-import { useDocument, VueFire } from 'vuefire'
+import { useDocument } from 'vuefire'
 
 mockNuxtImport('useCookie', () => {
   return (_name: string, _options?: CookieOptions) => ref(null)

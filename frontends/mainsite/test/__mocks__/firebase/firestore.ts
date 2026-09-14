@@ -1,7 +1,7 @@
 import { vi } from 'vitest'
 
 // Minimal mock for firebase/firestore
-export function getFirestore(app?: any) {
+export function getFirestore(_app?: any) {
   return {
     settings: (_: any) => { },
     collection: (path: string) => ({

@@ -9,8 +9,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/Zadigo/gopurchase/internal/handlers"
-	"github.com/Zadigo/gopurchase/internal/models"
+	"github.com/bayzed123/mycommerce/services/gopurchase/internal/handlers"
+	"github.com/bayzed123/mycommerce/services/gopurchase/internal/models"
 	"github.com/redis/go-redis/v9"
 )
 
@@ -95,15 +95,17 @@ func UpdatePaymentIntentRecorder(t *testing.T) *httptest.ResponseRecorder {
 			PaymentIntentID: os.Getenv("PAYMENT_INTENT_ID"),
 			CustomerID:      os.Getenv("CUSTOMER_ID"),
 		},
-		Firstname:   "John",
-		Lastname:    "Doe",
-		AddressLine: "1 rue de Paris",
-		Country:     "FR",
-		PostalCode:  "75001",
-		City:        "Paris",
-		State:       "Île-de-France",
-		Email:       "test@example.com",
-		Telephone:   "+330612345678",
+		Shipment: handlers.ShipmentInfo{
+			Firstname:   "John",
+			Lastname:    "Doe",
+			AddressLine: "1 rue de Paris",
+			Country:     "FR",
+			PostalCode:  "75001",
+			City:        "Paris",
+			State:       "Île-de-France",
+			Email:       "test@example.com",
+			Telephone:   "+330612345678",
+		},
 	})
 
 	reader := bytes.NewReader(data)

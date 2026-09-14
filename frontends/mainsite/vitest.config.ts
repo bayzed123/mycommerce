@@ -28,6 +28,24 @@ export default defineConfig({
     projects: [
       await defineVitestProject({
         test: {
+          name: 'unit',
+          include: [ 'test/unit/**/*.{test,spec}.ts' ],
+          environment: 'nuxt',
+          testTimeout: 20000,
+          tags: [
+            {
+              name: 'unit',
+              description: 'Tests that are focused on a single unit of code, such as a function or component.',
+            },
+            {
+              name: 'isolation',
+              description: 'Tests that are isolated and do not depend on external services or state.'
+            }
+          ]
+        }
+      }),
+      await defineVitestProject({
+        test: {
           name: 'nuxt',
           include: [ 'test/nuxt/**/*.{test,spec}.ts' ],
           environment: 'nuxt',

@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/Zadigo/gopurchase/internal/models"
+	"github.com/bayzed123/mycommerce/services/gopurchase/internal/models"
 	"github.com/go-co-op/gocron"
 	"github.com/redis/go-redis/v9"
 )

@@ -32,11 +32,13 @@ jobs:
           
       - name: Install build tools
         run: python -m pip install --upgrade build pytest
-        
-      # The tests are temporarily bypassed to prevent the pipeline from blocking deployment.
-      # - name: Test package
-      #   run: pytest
-        
+
+      - name: Install package (editable, for tests)
+        run: python -m pip install -e .
+
+      - name: Test package
+        run: pytest
+
       - name: Build distributions
         run: python -m build
         

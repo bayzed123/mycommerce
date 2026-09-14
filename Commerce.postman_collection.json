@@ -626,7 +626,7 @@
 								},
 								{
 									"key": "email",
-									"value": "zadigo@gmail.com",
+									"value": "test@example.com",
 									"type": "text"
 								},
 								{
@@ -829,7 +829,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"zadigo\",\r\n    \"password\": \"touparet\"\r\n}",
+							"raw": "{\r\n    \"username\": \"testuser\",\r\n    \"password\": \"changeme\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"

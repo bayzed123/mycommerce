@@ -1,6 +1,5 @@
 import { mountSuspended } from '@nuxt/test-utils/runtime'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { getProduct } from '~~/test/__fixtures__'
+import { afterEach, beforeEach, describe, it, vi } from 'vitest'
 import ProductPage from '~/pages/shop/[id].vue'
 
 // const mockedUseProductDetailsComposable = vi.fn().mockResolvedValue({

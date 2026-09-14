@@ -3,9 +3,10 @@ package tests
 import (
 	"testing"
 
-	"github.com/Zadigo/gopurchase/internal/handlers"
-	"github.com/Zadigo/gopurchase/tests/utils"
+	"github.com/bayzed123/mycommerce/services/gopurchase/internal/handlers"
+	"github.com/bayzed123/mycommerce/services/gopurchase/tests/utils"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"github.com/stripe/stripe-go/v85"
 )
 
@@ -33,7 +34,7 @@ func TestHandlersRedis(t *testing.T) {
 			name: "Should get payment intent",
 			test: func(t *testing.T, redisHandler *handlers.PaymentRedis) {
 				retrievedIntent, err := redisHandler.GetPaymentIntent(intent.ID)
-				assert.NoError(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, intent.ID, retrievedIntent.ID)
 			},
 		},
@@ -45,7 +46,7 @@ func TestHandlersRedis(t *testing.T) {
 				assert.NoError(t, err)
 
 				retrievedIntent, err := redisHandler.GetPaymentIntent(intent.ID)
-				assert.NoError(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, intent.Amount, retrievedIntent.Amount)
 			},
 		},
@@ -57,7 +58,7 @@ func TestHandlersRedis(t *testing.T) {
 				assert.NoError(t, err)
 
 				retrievedIntent, err := redisHandler.GetPaymentIntent(intent.ID)
-				assert.NoError(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, true, retrievedIntent.Metadata["completed"])
 			},
 		},

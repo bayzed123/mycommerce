@@ -3,9 +3,9 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/Zadigo/gopurchase/internal/models"
-	"github.com/Zadigo/gopurchase/internal/utils"
-	"github.com/Zadigo/gopurchase/internal/utils/requests"
+	"github.com/bayzed123/mycommerce/services/gopurchase/internal/models"
+	"github.com/bayzed123/mycommerce/services/gopurchase/internal/utils"
+	"github.com/bayzed123/mycommerce/services/gopurchase/internal/utils/requests"
 	"github.com/gorilla/websocket"
 )
 
