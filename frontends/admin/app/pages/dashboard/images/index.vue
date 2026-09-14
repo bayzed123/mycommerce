@@ -1,0 +1,95 @@
+<template>
+  <nuxt-container>
+    <div class="row">
+      <!-- Header -->
+      <header>
+        <nuxt-card>
+          <div class="flex justify-between align-center">
+            <nuxt-input v-model="search" type="search" class="w-full" option-label="name" option-value="id" placeholder="Select a product to use..." />
+          </div>
+        </nuxt-card>
+
+        <nuxt-card>
+          <!-- <nuxt-button @click="() => { toggleUploadModal() }">
+            Upload images
+          </nuxt-button> -->
+
+          <nuxt-button @click="() => { toggleImageAssociation() }">
+            Associate images
+            <nuxt-badge :label="selectionCount" variant="soft" />
+          </nuxt-button>
+
+          <nuxt-button>
+            <icon name="i-lucide-table" />
+          </nuxt-button>
+        </nuxt-card>
+      </header>
+
+      <!-- Images -->
+      <div class="grid grid-cols-2 gap-1 my-10 md:grid-cols-4">
+        <images-column v-for="image in searched" :key="image.id" :image="image" />
+      </div>
+    </div>
+
+    <!-- Modals -->
+    <!-- <nuxt-modal v-model:open="uploadModal">
+      <template #header>
+        <h2>Upload images</h2>
+      </template>
+
+      <template #body>
+        <nuxt-input v-model="fileNames" placeholder="File names" />
+        <nuxt-file-upload v-model="files" :multiple="true" label="Select files" />
+      </template>
+
+      <template #footer>
+        <nuxt-button @click="() => { toggleUploadModal() }">
+          Cancel
+        </nuxt-button>
+
+        <nuxt-button :loading="false" loading-icon="i-lucide-loader" @click="upload">
+          Upload
+        </nuxt-button>
+      </template>
+    </nuxt-modal> -->
+
+    <nuxt-modal v-model:open="imageAssociationModal">
+      <template #header>
+        <h2>
+          Select a product
+        </h2>
+      </template>
+
+      <template #body>
+        <nuxt-input-menu v-model="productSearch" :items="flattenedSearched" label-key="name" value-key="id" open-on-focus />
+      </template>
+
+      <template #footer>
+        <nuxt-button @click="() => { toggleImageAssociation() }">
+          Cancel
+        </nuxt-button>
+
+        <nuxt-button @click="associate">
+          Associate ({{ selectionCount }}) images
+        </nuxt-button>
+      </template>
+    </nuxt-modal>
+  </nuxt-container>
+</template>
+
+<script setup lang="ts">
+import type { Product, ProductImage } from '~/types';
+
+const { search, searched } = await useSearchImagesComposable()
+// const { search: searchProducts, searched: searchedProducts } = await useApiSearchEndpoint<Product[]>('/admin/v1/products')
+// const { images, files, fileNames, select, showModal: uploadModal, toggle: toggleUploadModal, upload, numberOfSelectedImages } = await useImagesComposable()
+
+
+const { flattenedSearched, search: productSearch } = useProductSearch()
+
+/**
+ * Association
+ */
+
+const { productToAssociate, showModal: imageAssociationModal, associate, toggle: toggleImageAssociation, selectionCount } = useImageAssociation(searched)
+</script>

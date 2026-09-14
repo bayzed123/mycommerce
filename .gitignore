@@ -1,0 +1,94 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+.thumbs.db
+
+# Quasar core related directories
+.quasar
+/quasar.config.*.temporary.compiled*
+
+# Cordova related directories and files
+/src-cordova/node_modules
+/src-cordova/platforms
+/src-cordova/plugins
+/src-cordova/www
+
+# Capacitor related directories and files
+/src-capacitor/www
+/src-capacitor/node_modules
+
+# BEX related directories and files
+/src-bex/www
+/src-bex/js/core
+
+# Nuxt dev/build outputs
+.output
+.data
+.nuxt
+.nitro
+.cache
+
+# Local env files
+.env
+.env.*
+.env.local*
+!.env.example
+
+# Misc files
+.fleet
+.tmp
+*.tmp*
+*.sublime-project
+*.sublime-workspace
+UserInterfaceState.xcuserstate
+$RECYCLE.BIN/
+log.txt
+.coverage
+*.sqlite*
+
+# IDE and build directories
+/.ionic
+/.sass-cache
+/.sourcemaps
+/.versions
+/.vscode/*
+!/.vscode/extensions.json
+!/.vscode/settings.json
+/coverage
+/platforms
+/plugins
+/www
+
+# Python
+__pycache__/
+
+# Tests
+*/coverage/
+__snapshots__/
+
+*~
+Thumbs.db
+.pytest_cache

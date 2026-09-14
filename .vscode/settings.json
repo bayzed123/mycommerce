@@ -1,0 +1,33 @@
+{
+    "[python]": {
+       "editor.codeActionsOnSave": {
+        "source.organizeImports": "explicit",
+        "source.unusedImports": "explicit"
+       }
+    },
+    "python.testing.pytestEnabled": true,
+    "python.testing.unittestEnabled": false,
+    "python.testing.autoTestDiscoverOnSaveEnabled": true,
+    "python-envs.defaultEnvManager": "ms-python.python:venv",
+    "python.analysis.autoSearchPaths": true,
+    "editor.codeActionsOnSave": {
+        "source.fixAll.oxc": "never"
+    },
+    "python-envs.pythonProjects": [
+        {
+            "path": "services/cartapi",
+            "envManager": "ms-python.python:venv",
+            "packageManager": "ms-python.python:pip"
+        },
+        {
+            "path": "services/addresses",
+            "envManager": "ms-python.python:venv",
+            "packageManager": "ms-python.python:pip"
+        },
+        {
+            "path": "services/shopapi",
+            "envManager": "ms-python.python:venv",
+            "packageManager": "ms-python.python:pip"
+        }
+    ]
+}

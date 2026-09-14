@@ -1,0 +1,10 @@
+{
+    "recommendations": [
+        "ionic.ionic",
+        "vitest.explorer",
+        "Postman.postman-for-vscode",
+        "docker.docker",
+        "WebNative.webnative",
+        "oxc.oxc-vscode"
+    ]
+}
