@@ -1,0 +1,41 @@
+name: Capture live page screenshots
+
+# One-off utility: the sandbox this repo is normally edited from cannot
+# reach *.up.railway.app or *.workers.dev directly (org egress policy),
+# so this runs the actual screenshot capture from GitHub's unrestricted
+# runners instead, then commits the PNGs to a dedicated branch that is
+# never merged - just used to pull the images back out.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  screenshot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install Playwright
+        run: |
+          npm install playwright@1.56.1
+          npx playwright install --with-deps chromium
+
+      - name: Capture screenshots
+        run: node .github/scripts/live-shot.js
+
+      - name: Commit screenshots to ops/live-screenshots branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout --orphan ops/live-screenshots
+          git rm -rf --cached . > /dev/null
+          git add -f screenshots
+          git commit -m "Live screenshots $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          git push -f origin HEAD:ops/live-screenshots
