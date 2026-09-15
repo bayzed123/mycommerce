@@ -314,7 +314,10 @@ AUTHENTICATION_BACKENDS = [
 # CKEditor for more information on customizing
 # the editor https://pypi.org/project/django-ckeditor-5/
 
-CKEDITOR_BASEPATH = MEDIA_ROOT / 'ckeditor/ckeditor'
+# A static-asset URL, not a user-media path - must not depend on MEDIA_ROOT
+# (which becomes a remote S3/R2 URL string, not a filesystem Path, once
+# USE_S3 is enabled).
+CKEDITOR_BASEPATH = STATIC_URL + 'ckeditor/ckeditor/'
 
 CKEDITOR_UPLOAD_PATH = 'ck_editor/'
 
