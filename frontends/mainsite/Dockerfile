@@ -34,14 +34,16 @@ FROM node:${NODE_VERSION}-slim AS production
 WORKDIR /app
 
 COPY --from=prod-dependencies /app/node_modules /app/node_modules
-COPY --from=build /app/dist /app/dist
+COPY --from=build /app/.output /app/.output
 
 # Define environment variables
 ENV HOST=0.0.0.0
 ENV NODE_ENV=production
 
-# Expose the port the application will run on
+# Expose the port the application will run on. The actual bound port comes
+# from $PORT at runtime (Nitro's node-server preset reads it directly) -
+# never hardcode it here, or a platform-assigned port won't match.
 EXPOSE 3000
 
 # Start the application
-CMD [ "node", "/server/index.mjs" ]
+CMD [ "node", "/app/.output/server/index.mjs" ]

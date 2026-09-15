@@ -254,16 +254,12 @@ export default defineNuxtConfig({
   },
 
   nitro: {
-    storage: {
-      redis: {
-        driver: 'redis',
-        base: 'nuxt-cache',
-        host: process.env.NUXT_PUBLIC_REDIS_HOST,
-        port: 6379,
-        username: process.env.NUXT_PUBLIC_REDIS_USER,
-        password: process.env.NUXT_PUBLIC_REDIS_PASSWORD
-      }
-    }
+    // Deploys as a Cloudflare Worker (frontends/mainsite/wrangler.toml).
+    // The redis-backed nitro cache storage that used to live here never
+    // actually ran anywhere real: `ioredis` isn't even an installed
+    // dependency, and Workers can't open raw TCP sockets to Redis anyway -
+    // it would have crashed the moment anything tried to use it.
+    preset: 'cloudflare_module'
   },
 
   imports: {

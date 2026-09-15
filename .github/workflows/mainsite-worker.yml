@@ -1,0 +1,90 @@
+name: Storefront (Cloudflare Worker)
+
+# Deploys frontends/mainsite as a Cloudflare Worker via Nitro's
+# cloudflare_module preset. Manual dispatch, same as worker.yml (the API
+# gateway) - review before pushing this to production traffic.
+
+on:
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: 22
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontends/mainsite
+    env:
+      # Public/build-time config - baked into the Worker bundle the same
+      # way `process.env.*` is already read in nuxt.config.ts. Nothing
+      # here is a private secret: a Stripe *publishable* key and a
+      # Firebase *client* config are both meant to ship in browser JS.
+      NUXT_PUBLIC_SITE_URL: "https://mycommerce-storefront.sbayxed.workers.dev"
+      NUXT_PUBLIC_SITE_NAME: "MyCommerce"
+      NUXT_PUBLIC_SITE_ENV: "production"
+
+      # Live backend
+      NUXT_PUBLIC_DJANGO_SHOP_API: "https://mycommerce-production-131f.up.railway.app"
+
+      # Not deployed yet - cartapi/gopurchase/reviews are paused. Placeholder
+      # so unimplemented flows fail predictably instead of pointing at
+      # localhost in production.
+      NUXT_PUBLIC_DJANGO_CART_API: "https://cart-api.example.com"
+      NUXT_PUBLIC_DJANGO_REVIEWS_PROD_URL: "https://reviews-api.example.com"
+      NUXT_PUBLIC_GOLANG_PAYMENT_ROUTER_URL: "https://purchase-api.example.com"
+      NUXT_PUBLIC_GOLANG_PROD_URL: "https://purchase-api.example.com"
+      NUXT_PUBLIC_QUART_PROD_URL: "https://quart-api.example.com"
+
+      NUXT_PUBLIC_WHATS_APP_URL: ${{ vars.NUXT_PUBLIC_WHATS_APP_URL }}
+
+      # Firebase client config (all values meant to be public - see
+      # https://firebase.google.com/docs/projects/api-keys). Empty until
+      # a real Firebase project is wired up; vuefire is expected to no-op
+      # gracefully without them.
+      NUXT_PUBLIC_FIREBASE_API_KEY: ${{ vars.NUXT_PUBLIC_FIREBASE_API_KEY }}
+      NUXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ${{ vars.NUXT_PUBLIC_FIREBASE_AUTH_DOMAIN }}
+      NUXT_PUBLIC_FIREBASE_DB_URL: ${{ vars.NUXT_PUBLIC_FIREBASE_DB_URL }}
+      NUXT_PUBLIC_FIREBASE_STORAGE_BUCKET: ${{ vars.NUXT_PUBLIC_FIREBASE_STORAGE_BUCKET }}
+      NUXT_PUBLIC_FIREBASE_APP_ID: ${{ vars.NUXT_PUBLIC_FIREBASE_APP_ID }}
+      NUXT_PUBLIC_FIREBASE_MEASUREMENT_ID: ${{ vars.NUXT_PUBLIC_FIREBASE_MEASUREMENT_ID }}
+      NUXT_PUBLIC_FIREBASE_MESSAGE_SENDER_ID: ${{ vars.NUXT_PUBLIC_FIREBASE_MESSAGE_SENDER_ID }}
+      NUXT_PUBLIC_FIREBASE_PROJECT_ID: ${{ vars.NUXT_PUBLIC_FIREBASE_PROJECT_ID }}
+
+      # Stripe *publishable* key only - safe to build into client JS.
+      NUXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: ${{ vars.NUXT_PUBLIC_STRIPE_PUBLISHABLE_KEY }}
+
+      # Signs dynamic OG image URLs (nuxt-og-image) against tampering -
+      # not a high-value credential, so a fixed generated value here is
+      # fine rather than requiring a repo secret to be added first.
+      NUXT_OG_IMAGE_SECRET: "088dEWs4DmoWuZQ3eHMOdJDJSf5-iGVb"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          package_json_file: frontends/mainsite/package.json
+
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+          cache-dependency-path: frontends/mainsite/pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build (Cloudflare Worker target)
+        run: pnpm build
+
+      - name: Deploy with Wrangler
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: frontends/mainsite
+          command: deploy
