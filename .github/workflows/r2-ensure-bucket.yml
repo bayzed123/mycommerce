@@ -29,6 +29,13 @@ jobs:
       AWS_DEFAULT_REGION: auto
       R2_ENDPOINT: ${{ secrets.CLOUDFLARE_SA3_API }}
     steps:
+      # R2 only supports path-style addressing (endpoint/bucket), not AWS's
+      # default virtual-hosted-style (bucket.endpoint) - without this, the
+      # AWS CLI tries to resolve a hostname R2 has no certificate for and
+      # fails with an SSL handshake error before even reaching R2.
+      - name: Configure AWS CLI for path-style S3 addressing
+        run: aws configure set default.s3.addressing_style path
+
       - name: Check for existing bucket
         id: check
         run: |
