@@ -2,93 +2,77 @@ import type { Nullable } from '~/types'
 import type { BusinessDetailsKeyValue, BusinessDetailsKeys } from '..'
 
 
+/**
+ * Identity for this store.
+ *
+ * Everything that identified the project this codebase was extracted
+ * from - another company's SIREN/SIRET/VAT, its registered address,
+ * phone number and mailbox, its founder's name and biography, and links
+ * to its live social accounts - has been removed rather than carried
+ * over. None of it belonged to this store, and a storefront that
+ * publishes someone else's legal identity is misleading to shoppers.
+ *
+ * The blanks below are deliberately blank: registration numbers are not
+ * something to invent. Fill each one in with this business's own real
+ * details before taking orders, since the mentions légales have to name
+ * the actual seller.
+ */
 export const businessDetails: BusinessDetails = {
   name: 'Aurelle',
   legalName: 'Aurelle',
   alternateName: [
-    'Aurelle Paris',
     'Aurelle Store'
   ],
-  siren: '790 849 574',
-  siret: '790 849 574 00039',
-  numberoTVA: 'FR29790849574',
-  creationDate: '2024-12-14',
-  // NOTE: siren / siret / numberoTVA / address below still identify the
-  // previously registered business. They must be replaced with the
-  // operating company's own details before taking real orders - French
-  // law requires the mentions légales to name the actual seller.
+  // TODO: this store's own company registration details.
+  siren: '',
+  siret: '',
+  numberoTVA: null,
+  rcs: '',
+  shareCapital: null,
+  creationDate: '',
   description: 'Online clothing store. Dresses, tops, shirts and trousers, with free standard delivery and easy returns.',
   logo: '',
-  sameAs: [
-    'https://fr.pinterest.com/labeautedineiah',
-    'https://facebook.com/labeautedineiah',
-    'https://www.instagram.com/ineiah'
-  ],
-  image: [
-
-  ],
-  rcs: '',
+  // TODO: this store's own social accounts, once they exist.
+  sameAs: [],
+  image: [],
+  // TODO: this store's own registered address.
   address: {
-    street: '13 Place Nouvelle Aventure',
-    postalCode: '59000',
-    city: 'Lille',
-    lat: 50.626999404132064,
-    lng: 3.0499777837365993
+    street: '',
+    postalCode: '',
+    city: '',
+    lat: null,
+    lng: null
   },
   priceRange: '$$',
-  foundingDate: '2024-12-14',
-  foundingLocation: 'Lille, France',
+  foundingDate: '',
+  foundingLocation: '',
   founderImage: null,
-  shareCapital: null,
-  founder: 'Natacha Morel',
-  founderDescription: 'Natacha Morel est une coiffeuse certifiée et experte en bien-être avec plus de 20 ans d\'expérience dans l\'industrie de la beauté.',
-  founderKnowsAbout: [
-    'Cheveux crépus',
-    'Cheveux bouclés',
-    'Coiffure homme',
-    'Coiffure femme',
-    'Coiffure multiculturelle',
-    'Coloration cheveux crépus',
-    'Hair Contouring',
-    'Soins capillaires',
-    'Coiffure Artistique',
-    'Coiffure sur-mesure',
-    'Bien-être',
-    'Formation capillaire'
-  ],
-  webContentManager: 'Natacha Morel',
-  publishingDirector: 'Natacha Morel',
-  editorInChief: 'Natacha Morel',
+  // TODO: the people actually responsible for this store and its site.
+  founder: '',
+  founderDescription: '',
+  founderKnowsAbout: [],
+  webContentManager: '',
+  publishingDirector: '',
+  editorInChief: '',
+  // TODO: whoever actually builds and hosts this site.
   websiteProvider: {
-    legalName: 'Gency313',
-    url: 'https://johnpm-consulting.fr/'
+    legalName: '',
+    url: ''
   },
   cloudProvider: {
-    legalName: 'SAS OVH',
-    url: 'http://www.ovhcloud.com/fr/',
-    description: 'OVH SAS est une filiale de la société OVH Groupe SA, société immatriculée au RCS de Lille',
-    address: '2 rue Kellermann - 59100 Roubaix - France',
-    rcs: '424 761 419 00045'
+    legalName: 'Cloudflare, Inc.',
+    url: 'https://www.cloudflare.com/',
+    description: 'The storefront runs on Cloudflare Workers.',
+    address: '101 Townsend St, San Francisco, CA 94107, United States',
+    rcs: ''
   },
+  // TODO: this store's own contact details.
   contact: {
-    telephone: '+33 07 86 20 94 59',
-    email: 'labeautedineiah@gmail.com',
-    address: '13 Place Nouvelle Aventure, 59000 Lille'
+    telephone: '',
+    email: '',
+    address: ''
   },
-  socials: {
-    instagram: {
-      url: 'https://www.instagram.com/ineiah',
-      handle: '@ineiah'
-    },
-    facebook: {
-      url: 'https://www.facebook.com/labeautedineiah',
-      handle: 'labeautedineiah'
-    },
-    pinterest: {
-      url: 'https://fr.pinterest.com/labeautedineiah',
-      handle: 'labeautedineiah'
-    }
-  }
+  socials: {}
 }
 
 /**
