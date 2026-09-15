@@ -36,6 +36,11 @@ jobs:
       - name: Configure AWS CLI for path-style S3 addressing
         run: aws configure set default.s3.addressing_style path
 
+      - name: Diagnose - list buckets (no bucket name in the URL at all)
+        run: |
+          echo "Endpoint host: $(echo "$R2_ENDPOINT" | sed -E 's#https?://##; s#/.*##')"
+          aws s3api list-buckets --endpoint-url "$R2_ENDPOINT" || true
+
       - name: Check for existing bucket
         id: check
         run: |
