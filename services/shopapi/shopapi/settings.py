@@ -157,11 +157,17 @@ USE_S3 = env.bool('USE_S3', default=False)
 
 
 def aws_endpoint(path=None):
-    base_url = 'https://{bucket}.s3.{region}.amazonaws.com'
-
-    bucket = env('AWS_S3_BUCKET_NAME')
-    region = env('AWS_S3_REGION_NAME')
-    url = base_url.format(bucket=bucket, region=region)
+    # AWS_S3_ENDPOINT_URL is required for any S3-compatible provider that
+    # isn't AWS itself - e.g. Cloudflare R2, whose endpoint is
+    # https://<account_id>.r2.cloudflarestorage.com and does not follow
+    # AWS's own {bucket}.s3.{region}.amazonaws.com pattern at all.
+    explicit_endpoint = env('AWS_S3_ENDPOINT_URL', default=None)
+    if explicit_endpoint:
+        url = explicit_endpoint.rstrip('/')
+    else:
+        bucket = env('AWS_S3_BUCKET_NAME')
+        region = env('AWS_S3_REGION_NAME')
+        url = 'https://{bucket}.s3.{region}.amazonaws.com'.format(bucket=bucket, region=region)
 
     if path is not None:
         return url + f'/{path}'
@@ -180,7 +186,7 @@ if USE_S3:
         'access_key': env('AWS_S3_ACCESS_KEY_ID'),
         'secret_key': env('AWS_S3_SECRET_ACCESS_KEY'),
         'bucket_name': env('AWS_STORAGE_BUCKET_NAME'),
-        'region_name': env('AWS_S3_REGION_NAME'),
+        'region_name': env('AWS_S3_REGION_NAME', default='auto'),
         'object_parameters': {'CacheControl': 'max-age=86400'},
         'endpoint_url': aws_endpoint(),
         # 'cloudfront_key': '',  # AWS_CLOUDFRONT_KEY
