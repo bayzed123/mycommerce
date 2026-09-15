@@ -1,0 +1,5 @@
+shopapi-swagger: HTTP 200 — https://mycommerce-production-131f.up.railway.app/api/schema/swagger-ui/
+shopapi-admin: HTTP 200 — https://mycommerce-production-131f.up.railway.app/admin/login/
+worker-health: HTTP 200 — https://mycommerce-api-gateway.sbayxed.workers.dev/health
+storefront-home: HTTP 200 — https://mycommerce-storefront.sbayxed.workers.dev/
+storefront-shop: HTTP 404 — https://mycommerce-storefront.sbayxed.workers.dev/shop
