@@ -1,0 +1,15 @@
+name = "mycommerce-admin"
+compatibility_date = "2026-09-15"
+
+# This app is `ssr: false` with no server routes - a pure SPA. So it ships
+# as static assets only, with no Worker script at all: nothing to execute
+# per request, and client-side routes (/dashboard/products/123) fall back
+# to the SPA shell instead of 404ing.
+[assets]
+directory = "./.output/public"
+not_found_handling = "single-page-application"
+
+# Backend URLs are baked in at build time by
+# .github/workflows/admin-worker.yml, the same way nuxt.config.ts already
+# reads them from process.env. Nothing secret lives here - the dashboard
+# authenticates against the Shop API with the operator's own login.

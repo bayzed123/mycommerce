@@ -24,7 +24,10 @@ export default defineNuxtConfig({
   },
 
   nuxtAuthentication: {
-    domain: 'http://127.0.0.1:8000',
+    // Same backend as prodDomain below - hardcoding localhost here meant a
+    // deployed build tried to authenticate against the visitor's own
+    // machine, so login could never work anywhere but a dev laptop.
+    domain: process.env.NUXT_PUBLIC_DJANGO_SHOP_PROD_DOMAIN || 'http://127.0.0.1:8000',
     accessEndpoint: '/auth/v1/token/',
     refreshEndpoint: '/auth/v1/token/refresh/',
     verifyEndpoint: '/auth/v1/token/verify/' 

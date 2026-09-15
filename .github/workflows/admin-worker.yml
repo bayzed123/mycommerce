@@ -1,0 +1,58 @@
+name: Admin dashboard (Cloudflare)
+
+# Deploys frontends/admin to Cloudflare. The app is `ssr: false` with no
+# server routes, so it ships as static assets only - no Worker script,
+# no per-request compute. Manual dispatch, matching worker.yml and
+# mainsite-worker.yml.
+
+on:
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: 22
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontends/admin
+    env:
+      # Live backend. The dashboard talks to the Shop API directly and
+      # authenticates with the operator's own credentials.
+      NUXT_PUBLIC_DJANGO_SHOP_PROD_DOMAIN: "https://mycommerce-production-131f.up.railway.app"
+
+      # Not deployed yet - cartapi/reviews are paused. Placeholder so those
+      # dashboard sections fail predictably instead of pointing at
+      # localhost in production.
+      NUXT_PUBLIC_DJANGO_CART_PROD_DOMAIN: "https://cart-api.example.com"
+      NUXT_PUBLIC_DJANGO_REVIEWS_PROD_DOMAIN: "https://reviews-api.example.com"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          package_json_file: frontends/admin/package.json
+
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+          cache-dependency-path: frontends/admin/pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build static SPA
+        run: pnpm generate
+
+      - name: Deploy with Wrangler
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: frontends/admin
+          command: deploy

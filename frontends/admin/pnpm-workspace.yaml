@@ -1,0 +1,15 @@
+# Makes this app its own pnpm workspace root, the same way
+# frontends/mainsite already is, so `pnpm install` run from inside
+# frontends/admin resolves against this app's own pnpm-lock.yaml instead
+# of walking up to the monorepo root workspace.
+#
+# Note: this app is pinned to pnpm 10, which spells the build allowlist
+# `onlyBuiltDependencies` (a list). mainsite is on pnpm 11, which uses
+# `allowBuilds` (a map) - the two are not interchangeable.
+onlyBuiltDependencies:
+  - '@parcel/watcher'
+  - esbuild
+  - sharp
+  - unrs-resolver
+  - vue-demi
+  - workerd
