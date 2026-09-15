@@ -22,7 +22,7 @@ jobs:
       # here is a private secret: a Stripe *publishable* key and a
       # Firebase *client* config are both meant to ship in browser JS.
       NUXT_PUBLIC_SITE_URL: "https://mycommerce-storefront.sbayxed.workers.dev"
-      NUXT_PUBLIC_SITE_NAME: "MyCommerce"
+      NUXT_PUBLIC_SITE_NAME: "Aurelle"
       NUXT_PUBLIC_SITE_ENV: "production"
 
       # Live backend

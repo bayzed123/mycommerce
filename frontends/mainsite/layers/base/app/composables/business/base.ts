@@ -3,19 +3,21 @@ import type { BusinessDetailsKeyValue, BusinessDetailsKeys } from '..'
 
 
 export const businessDetails: BusinessDetails = {
-  name: 'La beauté d\'Inéïah',
-  legalName: 'La beauté d\'Inéïah',
+  name: 'Aurelle',
+  legalName: 'Aurelle',
   alternateName: [
-    'La beauté d\'Ineiah',
-    'Inéïah',
-    'Ineiah',
-    'Ineiah Coiffure'
+    'Aurelle Paris',
+    'Aurelle Store'
   ],
   siren: '790 849 574',
   siret: '790 849 574 00039',
   numberoTVA: 'FR29790849574',
   creationDate: '2024-12-14',
-  description: 'Salon de coiffure multiculturel spécialisé dans tous types de cheveux : crépus, bouclés, lisses. Soins, coupes et styles sur-mesure',
+  // NOTE: siren / siret / numberoTVA / address below still identify the
+  // previously registered business. They must be replaced with the
+  // operating company's own details before taking real orders - French
+  // law requires the mentions légales to name the actual seller.
+  description: 'Online clothing store. Dresses, tops, shirts and trousers, with free standard delivery and easy returns.',
   logo: '',
   sameAs: [
     'https://fr.pinterest.com/labeautedineiah',
