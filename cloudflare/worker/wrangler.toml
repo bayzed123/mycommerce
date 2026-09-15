@@ -3,8 +3,11 @@ main = "src/index.ts"
 compatibility_date = "2026-09-15"
 
 [vars]
-# Replace these with reachable HTTPS backend URLs before deployment.
-SHOP_API_URL = "https://shop-api.example.com"
+# Live: services/shopapi deployed on Railway (project "my-commerce").
+SHOP_API_URL = "https://mycommerce-production-131f.up.railway.app"
+# Not deployed yet - cartapi/gopurchase are blocked on Railway's free-plan
+# resource limit. Requests to /cart/* and /purchase/* will fail until
+# these point at real backends.
 CART_API_URL = "https://cart-api.example.com"
 PURCHASE_API_URL = "https://purchase-api.example.com"
 ALLOWED_ORIGINS = "https://your-storefront.example.com"
