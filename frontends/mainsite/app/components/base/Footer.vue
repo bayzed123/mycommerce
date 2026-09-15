@@ -7,8 +7,7 @@
         </nuxt-link-locale>
 
         <p class="text-sm/7 mt-6">
-          {{ get('legalName') }} is a free and open-source UI component library with over 300+ beautifully
-          crafted, customizable components built with Tailwind CSS.
+          {{ get('description') }}
         </p>
 
         <div class="flex gap-2">

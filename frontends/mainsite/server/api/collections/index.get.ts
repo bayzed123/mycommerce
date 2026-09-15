@@ -1,14 +1,37 @@
-import { collectionRestApiFixture } from '~~/layers/base/app/utils/__fixtures__'
+import type { ProductCollection } from '~/types'
+import { createErrorTemplate } from '~/utils'
 
-export default defineCachedEventHandler(async (_event): Promise<typeof collectionRestApiFixture> => {
+export default defineEventHandler(async (_event): Promise<ProductCollection> => {
   try {
-    return collectionRestApiFixture
-  } catch (e) {
-    console.error('Error fetching collections:', e)
-    return { data: { allCollections: [] } }
+    // Real catalogue from the Shop API. This used to return
+    // `collectionRestApiFixture`, which is why the live homepage showed
+    // placeholder collections with https://example.com/... illustrations.
+    const data = await $fetch<ProductCollection>('/graphql/', {
+      baseURL: useRuntimeConfig().public.prodDomain,
+      method: 'POST',
+      body: {
+        query: `
+        query {
+          allCollections {
+            name
+            viewName
+            category
+            subCategory
+            description
+            illustration
+            numberOfItems
+            slug
+            subcategorySlug
+            tags
+            createdOn
+          }
+        }`
+      }
+    })
+
+    return data
+  } catch (error) {
+    const template = createErrorTemplate(error)
+    throw createError(template)
   }
-}, {
-  base: 'redis',
-  name: 'collections',
-  maxAge: 0 // disable cache for now
 })

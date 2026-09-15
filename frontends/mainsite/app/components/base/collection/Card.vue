@@ -1,6 +1,8 @@
 <template>
   <article v-if="collection" class="relative rounded-md overflow-hidden">
-    <base-collection-card-content :url-id="collection.slug" :collection-name="collection.name" :category="collection.category" :image="image" />
+    <!-- Prefer the collection's own illustration from the backend; the
+    `image` prop is only a fallback for collections that have none. -->
+    <base-collection-card-content :url-id="collection.slug" :collection-name="collection.name" :category="collection.category" :image="collection.illustration || image" />
   </article>
 
   <article v-else class="relative rounded-md overflow-hidden">
