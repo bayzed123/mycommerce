@@ -6,6 +6,7 @@ MyCommerce is a modular e-commerce platform composed of Nuxt 4 frontends, Django
 
 ## Contents
 
+- [Live deployment](#live-deployment)
 - [What is included](#what-is-included)
 - [Architecture and request flow](#architecture-and-request-flow)
 - [Repository structure](#repository-structure)
@@ -25,6 +26,23 @@ MyCommerce is a modular e-commerce platform composed of Nuxt 4 frontends, Django
 - [Troubleshooting](#troubleshooting)
 - [Known gaps and maintenance notes](#known-gaps-and-maintenance-notes)
 - [References](#references)
+
+## Live deployment
+
+| Component | URL | Status |
+| --- | --- | --- |
+| Shop API (backend) | https://mycommerce-production-131f.up.railway.app | Live on Railway. Free-tier sleep mode — the first request after idling wakes it and can take a few seconds. |
+| Shop API docs (Swagger) | https://mycommerce-production-131f.up.railway.app/api/schema/swagger-ui/ | Live |
+| Shop API admin | https://mycommerce-production-131f.up.railway.app/admin/ | Live — see [Admin dashboard access](#admin-dashboard-access) |
+| Cloudflare Worker gateway | https://mycommerce-api-gateway.sbayxed.workers.dev | Live, proxies `/shop/*` to the Shop API above |
+| Cart API, Go purchase service | — | Not deployed. Paused on Railway's free-plan resource limit. |
+| Nuxt storefront / admin / mobile frontends | — | Not deployed anywhere yet. CI (`mainsite.yml` etc.) only lints, tests, and builds them. |
+
+Media and static assets for the Shop API are served from Cloudflare R2 (`mycommerce-media` bucket, Gadget02030 account) through `django-storages`, configured with the `USE_S3`/`AWS_S3_*` environment variables on the Railway service (not in this repo).
+
+### Admin dashboard access
+
+`services/shopapi/entrypoint.sh` bootstraps the first Django admin superuser automatically on deploy, from `DJANGO_SUPERUSER_USERNAME` / `DJANGO_SUPERUSER_EMAIL` / `DJANGO_SUPERUSER_PASSWORD` environment variables set on the Railway service. It only creates that account the first time it doesn't already exist — a later redeploy never resets or overwrites it, so a password changed by hand in `/admin/` stays put. Log in at `/admin/` with whatever values are currently set for those three variables (in the Railway dashboard, not committed here).
 
 ## What is included
 
@@ -643,17 +661,17 @@ The repository contains useful but partially outdated planning material. `docs/A
 
 The current root package scripts include frontend convenience commands, but they do not provide a complete all-services orchestration command; `docker compose up` is now the closest thing to one for the backend services.
 
-Known application-level bugs, tracked in `TODO.md`, that still need investigation against a live backend: the cart drawer does not show newly added items without a page refresh, the last product added to the cart renders nothing, and `/shop/<id>` product detail pages can 500/crash for some products. These could not be reproduced or fixed in this pass because no Shop/Cart API is deployed anywhere reachable yet — see [Cloudflare Worker and PyPI package](#cloudflare-worker-and-pypi-package).
+Known application-level bugs, tracked in `TODO.md`: the cart drawer does not show newly added items without a page refresh, the last product added to the cart renders nothing, and `/shop/<id>` product detail pages can 500/crash for some products. The Shop API is now live (see [Live deployment](#live-deployment)), but the Cart API and the storefront that exercises these flows are not deployed yet, so these still need a real frontend against the live backend to reproduce and fix.
 
 The frontend environment template and active Nuxt configuration contain a few naming differences, notably Firebase database and message-sender variable names. Keep the template synchronized with the variable names actually consumed by `nuxt.config.ts` whenever environment configuration is changed.
 
 ## Cloudflare Worker and PyPI package
 
-The Cloudflare gateway source is in [`cloudflare/worker`](cloudflare/worker/README.md). It is intended for the **Sbayxed Cloudflare account** and proxies `/shop/*`, `/cart/*`, and `/purchase/*` to the three active backend services. Configure the origin URLs in `cloudflare/worker/wrangler.toml`, then deploy with Wrangler or the guarded `.github/workflows/worker.yml` workflow. The Worker must point to reachable HTTPS origins; it cannot reach local `127.0.0.1` services after deployment.
+The Cloudflare gateway source is in [`cloudflare/worker`](cloudflare/worker/README.md). It runs live in the **Sbayxed Cloudflare account** at https://mycommerce-api-gateway.sbayxed.workers.dev and proxies `/shop/*` to the live Shop API; `/cart/*` and `/purchase/*` still point at placeholder origins in `cloudflare/worker/wrangler.toml` until the Cart API and Go purchase service are deployed. Redeploy with Wrangler or the guarded `.github/workflows/worker.yml` workflow after changing an origin URL. The Worker must point to reachable HTTPS origins; it cannot reach local `127.0.0.1` services after deployment.
 
 The reusable Python client is in [`packages/mycommerce-platform`](packages/mycommerce-platform/README.md). Install it with `pip install mycommerce-platform` after publishing. The `.github/workflows/pypi.yml` workflow tests and builds the package and publishes it through PyPI Trusted Publishing when a tag matching `mycommerce-platform-v*` is pushed. Before the first release, create a PyPI Trusted Publisher for this GitHub repository, workflow, and the `pypi` environment. No PyPI token should be committed to the repository.
 
-The R2 bucket `mycommerce-media` was created in the separate **Gadget02030** Cloudflare account. It is intentionally not bound to the Sbayxed Worker because Worker R2 bindings are account-scoped. Use an authorized S3-compatible backend integration for that bucket when media storage is enabled.
+The R2 bucket `mycommerce-media` lives in the separate **Gadget02030** Cloudflare account and is wired into the live Shop API as its media/static storage backend (see [Live deployment](#live-deployment)). It is intentionally not bound to the Sbayxed Worker, since Worker R2 bindings are account-scoped — the Shop API talks to it directly through the S3-compatible API instead.
 
 ## References
 
