@@ -63,6 +63,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.locale.LocaleMiddleware',
@@ -150,7 +151,7 @@ USE_TZ = True
 # STATIC_URL = f'{CLOUDFRONT_DOMAIN}/static/'
 STATIC_URL = '/static/'
 
-STATIC_ROOT = 'static'
+STATIC_ROOT = BASE_DIR / 'static'
 
 
 USE_S3 = env.bool('USE_S3', default=False)
@@ -175,12 +176,27 @@ def aws_endpoint(path=None):
     return url
 
 
+# Static files (admin CSS/JS, Swagger UI assets, etc.) are always served
+# locally through WhiteNoise, never through S3/R2, regardless of USE_S3.
+# They're bundled with the app at build/deploy time, so there's no benefit
+# to putting them behind object storage - and R2's S3 API endpoint isn't a
+# public HTTP URL a browser can just GET (it needs a signed request), so
+# anything collectstatic pushed there would 403 for every visitor. That's
+# what made the admin render unstyled once USE_S3 was first turned on.
+STORAGES = {
+    'staticfiles': {
+        # Not the Manifest variant: that one hard-fails collectstatic if any
+        # referenced asset (e.g. a font url() inside a vendored CSS file) is
+        # missing from the tree, which is a real risk on a first real run of
+        # collectstatic in production. Plain compression still gets gzip/
+        # brotli without that strictness.
+        'BACKEND': 'whitenoise.storage.CompressedStaticFilesStorage',
+    }
+}
+
 if USE_S3:
-    # S3 Backend Storage
+    # S3-compatible object storage for user-uploaded media only.
     # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html
-    # https://forum.djangoproject.com/t/storage-4-2-how-to-subclass-default/29190/2
-    # FIXME: https://github.com/jschneier/django-storages/issues/1361 there seems to
-    # be a bug when trying to access the admin with DEBUG
 
     DEFAULT_S3_SETTINGS = {
         'access_key': env('AWS_S3_ACCESS_KEY_ID'),
@@ -195,21 +211,11 @@ if USE_S3:
         'default_acl': 'public-read'
     }
 
-    STORAGES = {
-        'default': {
-            'BACKEND': 'storages.backends.s3boto3.S3Boto3Storage',
-            'OPTIONS': {
-                **DEFAULT_S3_SETTINGS,
-                'location': 'media',
-            }
-        },
-        'staticfiles': {
-            'BACKEND': 'storages.backends.s3boto3.S3Boto3Storage',
-            'OPTIONS': {
-                **DEFAULT_S3_SETTINGS,
-                'file_overwrite': True,
-                'location': 'static',
-            }
+    STORAGES['default'] = {
+        'BACKEND': 'storages.backends.s3boto3.S3Boto3Storage',
+        'OPTIONS': {
+            **DEFAULT_S3_SETTINGS,
+            'location': 'media',
         }
     }
 
