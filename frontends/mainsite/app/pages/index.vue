@@ -4,12 +4,10 @@
     <client-only>
       <header class="my-10 w-full h-[40vh] bg-center bg-no-repeat bg-cover rounded-lg text-white p-10 relative" v-motion-fade :style="{ backgroundImage: 'url(/images/group2/img1.jpg )' }">
         <h1 class="text-white text-3xl absolute bottom-4 left-3 uppercase font-bold">
-          Something
+          {{ title }}
         </h1>
       </header>
     </client-only>
-
-    {{ collections }}
 
     <!-- Collections -->
     <div class="grid grid-cols-1 xl:grid-cols-3 w-full gap-3 overflow-hidden">
@@ -93,8 +91,8 @@ useSeoMeta({
 
 if (import.meta.env.NODE_ENV === 'production') {
   defineOgImage('NuxtSeoTakumi', {
-    title: "Some title",
-    description: "Some description"
+    title,
+    description
   })
 }
 </script>

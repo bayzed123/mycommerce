@@ -100,8 +100,8 @@ useSchemaOrg(products.value.map(x => defineProduct({
 
 if (import.meta.env.NODE_ENV == 'production') {
   defineOgImage('NuxtSeoTakumi', {
-    title: "Some title",
-    description: "Some description"
+    title: toValue(useChangeCase(id as string, 'capitalCase')),
+    description: t('Découvrez toutes notre collection de vêtements')
   })
 }
 </script>

@@ -9,10 +9,7 @@
             </h1>
   
             <p class="font-light">
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-              Sed ipsa, aspernatur rerum magni voluptas aut molestiae ducimus
-              voluptates, corrupti quaerat, ut quisquam doloribus. Inventore,
-              deleniti est quae nesciunt repellat non.
+              {{ $t('Merci pour ta commande') }}
             </p>
   
             <nuxt-link-locale id="link-home" to="/" class="mt-5">

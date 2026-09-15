@@ -172,6 +172,7 @@ export default defineI18nLocale(async _locale => {
     "Hide filters": "Masquer les filtres",
     "Price range": "Gamme de prix",
     "New": "Nouveau",
+    "Merci pour ta commande": "Merci pour ta commande. Tu vas recevoir un email de confirmation avec le détail de ta commande et son suivi.",
   }
 })
 

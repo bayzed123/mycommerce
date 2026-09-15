@@ -134,7 +134,7 @@ useSeoMeta({
 // })))
 
 defineOgImage('NuxtSeoTakumi', {
-  title: "Some title",
-  description: "Some description"
+  title: t('Liste de souhait'),
+  description: t('Découvrez toutes notre collection de vêtements')
 })
 </script>
